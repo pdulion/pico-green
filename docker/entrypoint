@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+term() {
+  echo
+  echo "Stopping..."
+  kill -KILL "$pid" 2>/dev/null
+}
+trap term SIGTERM SIGKILL SIGQUIT INT
+echo "Running..."
+pid=$$
+sleep infinity

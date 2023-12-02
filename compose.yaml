@@ -1,0 +1,8 @@
+services:
+  pico-cpp-sdk:
+    image: pico-cpp-sdk
+    build: docker
+    volumes:
+      - type: bind
+        source: ./
+        target: /opt/code/green-pi
