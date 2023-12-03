@@ -37,8 +37,11 @@ RUN \
     texinfo \
     && \
   apt-get clean && \
+  rm -rf /var/lib/apt/lists/* && \
   chsh -s /bin/zsh && \
-  git config --global advice.detachedHead false
+  git config --global advice.detachedHead false && \
+  git config --global user.name "Phillip DuLion" && \
+  git config --global user.email "phillip@dulion.com"
 
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
     -p git

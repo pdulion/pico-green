@@ -1,7 +1,8 @@
 services:
   pico-cpp-sdk:
     image: pico-cpp-sdk
-    build: docker
+    privileged: true
+    build: ./docker
     volumes:
       - type: bind
         source: ./
