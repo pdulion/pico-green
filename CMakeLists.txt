@@ -1,17 +1,25 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.12)
 
-# Pull in SDK (must be before project)
+set(NAME green)
+set(PICO_BOARD pico_w)
+
 include(pico_sdk_import.cmake)
-project(green-pi VERSION 0.1.0 LANGUAGES C CXX)
+
+project(${NAME} C CXX ASM)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # Initialize the SDK
 pico_sdk_init()
 
-include(CTest)
-enable_testing()
+include(lwip_import.cmake)
+
+SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/port/FreeRTOS-Kernel" CACHE STRING "Local Config")
+include_directories("S{FREERTOS_CONFIG_FILE_DIRECTORY}")
+include(FreeRTOS_Kernel_import.cmake)
 
 add_subdirectory(src)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+set(CPACK_GENERATOR "ZIP" "TGZ")
 include(CPack)

@@ -93,5 +93,7 @@ RUN \
   git clone --depth 1 --branch v3.2.0  https://github.com/FreeRTOS/coreJSON.git && \
   git clone --depth 1 --branch v1.2.0  https://github.com/FreeRTOS/coreSNTP.git
 
+ENV FREERTOS_KERNEL_PATH=${CODE_PATH}/FreeRTOS-Kernel
+
 COPY --chmod=700 ./entrypoint /root/
 ENTRYPOINT ["/root/entrypoint"]

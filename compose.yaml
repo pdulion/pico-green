@@ -3,6 +3,7 @@ services:
     image: pico-cpp-sdk
     privileged: true
     build: ./docker
+    env_file: .env
     volumes:
       - type: bind
         source: ./
