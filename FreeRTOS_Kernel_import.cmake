@@ -8,11 +8,16 @@
 if (DEFINED ENV{FREERTOS_KERNEL_PATH} AND (NOT FREERTOS_KERNEL_PATH))
     set(FREERTOS_KERNEL_PATH $ENV{FREERTOS_KERNEL_PATH})
     message("Using FREERTOS_KERNEL_PATH from environment ('${FREERTOS_KERNEL_PATH}')")
+else ()
+	if (DEFINED FREERTOS_KERNEL_PATH)
+		message("Using Given FREERTOS_KERNEL_PATH '${FREERTOS_KERNEL_PATH}')")
+	else ()
+		set(FREERTOS_KERNEL_PATH "${CMAKE_CURRENT_LIST_DIR}/lib/FreeRTOS-Kernel")
+	    message("Using local FREERTOS_KERNEL_PATH '${FREERTOS_KERNEL_PATH}')")
+    endif ()
 endif ()
 
 set(FREERTOS_KERNEL_RP2040_RELATIVE_PATH "portable/ThirdParty/GCC/RP2040")
-# undo the above
-set(FREERTOS_KERNEL_RP2040_BACK_PATH "../../../..")
 
 if (NOT FREERTOS_KERNEL_PATH)
     # check if we are inside the FreeRTOS kernel tree (i.e. this file has been included directly)
@@ -34,6 +39,7 @@ if (NOT FREERTOS_KERNEL_PATH)
     foreach(POSSIBLE_SUFFIX Source FreeRTOS-Kernel FreeRTOS/Source)
         # check if FreeRTOS-Kernel exists under directory that included us
         set(SEARCH_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+        # set(SEARCH_ROOT ../../../..)
         get_filename_component(_POSSIBLE_PATH ${SEARCH_ROOT}/${POSSIBLE_SUFFIX} REALPATH)
         if (EXISTS ${_POSSIBLE_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}/CMakeLists.txt)
             get_filename_component(FREERTOS_KERNEL_PATH ${_POSSIBLE_PATH} REALPATH)
@@ -53,9 +59,14 @@ get_filename_component(FREERTOS_KERNEL_PATH "${FREERTOS_KERNEL_PATH}" REALPATH B
 if (NOT EXISTS ${FREERTOS_KERNEL_PATH})
     message(FATAL_ERROR "Directory '${FREERTOS_KERNEL_PATH}' not found")
 endif()
-if (NOT EXISTS ${FREERTOS_KERNEL_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}/CMakeLists.txt)
+if (NOT EXISTS ${FREERTOS_KERNEL_PATH}/${FREERTOS_KERNEL_RP2041_RELATIVE_PATH}/CMakeLists.txt)
     message(FATAL_ERROR "Directory '${FREERTOS_KERNEL_PATH}' does not contain an RP2040 port here: ${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}")
 endif()
 set(FREERTOS_KERNEL_PATH ${FREERTOS_KERNEL_PATH} CACHE PATH "Path to the FreeRTOS_KERNEL" FORCE)
 
 add_subdirectory(${FREERTOS_KERNEL_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH} FREERTOS_KERNEL)
+message("ADD SUB ${FREERTOS_KERNEL_PATH}/${FREERTOS_KERNEL_RP2040_RELATIVE_PATH}\n")
+
+add_library(FREERTOS_PORT INTERFACE)
+target_include_directories(FREERTOS_PORT INTERFACE ${FREERTOS_CONFIG_FILE_DIRECTORY})
+target_sources(FREERTOS_PORT INTERFACE ${FREERTOS_CONFIG_FILE_DIRECTORY}/IdleMemory.c)
