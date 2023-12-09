@@ -16,8 +16,10 @@ RUN \
     ca-certificates \
     git \
     gnupg \
+    minicom \
     python3 \
     python3-pip \
+    screen \
     software-properties-common \
     wget \
     zsh \
