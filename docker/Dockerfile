@@ -33,6 +33,7 @@ RUN \
     libnewlib-arm-none-eabi \
     libtool \
     libusb-1.0-0-dev \
+    openocd \
     pkg-config \
     texinfo \
     && \
@@ -52,17 +53,17 @@ RUN \
   git clone --depth 1 --branch 1.5.1 https://github.com/raspberrypi/pico-sdk.git ${SDK_PATH} && \
   cd ${SDK_PATH} && \
   git submodule update --init
+
 ENV PICO_SDK_PATH=${SDK_PATH}
+ENV PICO_OPENOCD_PATH=${CODE_PATH}/openocd
 ENV PICO_EXAMPLES_PATH=${CODE_PATH}/pico_examples
 ENV PICO_EXTRAS_PATH=${CODE_PATH}/pico_extras
 ENV PICO_PLAYGROUND_PATH=${CODE_PATH}/pico_playground
 RUN \
-  git clone --depth 1 --branch sdk-1.5.1 https://github.com/raspberrypi/pico-examples.git ${PICO_EXAMPLES_PATH} && \
-  cd ${PICO_EXAMPLES_PATH} && git submodule update --init && \
-  git clone --depth 1 --branch sdk-1.5.1 https://github.com/raspberrypi/pico-extras.git ${PICO_EXTRAS_PATH} && \
-  cd ${PICO_EXTRAS_PATH} && git submodule update --init && \
-  git clone --depth 1 --branch sdk-1.5.1 https://github.com/raspberrypi/pico-playground.git ${PICO_PLAYGROUND_PATH} && \
-  cd ${PICO_PLAYGROUND_PATH} && git submodule update --init
+  git clone --depth 1 --branch rp2040-v0.12.0 --recurse-submodules https://github.com/raspberrypi/openocd.git         ${PICO_OPENOCD_PATH}  && \
+  git clone --depth 1 --branch sdk-1.5.1      --recurse-submodules https://github.com/raspberrypi/pico-examples.git   ${PICO_EXAMPLES_PATH} && \
+  git clone --depth 1 --branch sdk-1.5.1      --recurse-submodules https://github.com/raspberrypi/pico-extras.git     ${PICO_EXTRAS_PATH}   && \
+  git clone --depth 1 --branch sdk-1.5.1      --recurse-submodules https://github.com/raspberrypi/pico-playground.git ${PICO_PLAYGROUND_PATH}
 
 # Build Pico Examples
 ARG PICO_EXAMPLES_BUILD=${PICO_EXAMPLES_PATH}/build

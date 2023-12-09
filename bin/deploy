@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+elf=$(realpath *.elf)
+if [ ! -z "${1}" ]; then
+  elf=$(realpath ${1})
+fi
+if [ -z "$elf" ] || [ ! -f "$elf" ]; then
+  echo "File not found '$elf'"
+  exit 1
+fi
+
+speed=1024
+interface=raspberrypi-swd.cfg
+
+openocd -s ${HOME}/pico/openocd/tcl/ -f interface/${interface} -f target/rp2040.cfg -c "adapter speed ${speed}" -c "program ${elf} verify reset exit"
+echo Deployed
+arm-none-eabi-size ${elf}
