@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-echo Ctrl+A to exit
+echo Ctrl+a k to exit
 exec screen /dev/ttyACM0 115200

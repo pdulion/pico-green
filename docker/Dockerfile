@@ -72,7 +72,14 @@ ARG PICO_EXAMPLES_BUILD=${PICO_EXAMPLES_PATH}/build
 RUN \
   cmake -S ${PICO_EXAMPLES_PATH} -B ${PICO_EXAMPLES_BUILD} -DCMAKE_BUILD_TYPE=Debug && \
   cd ${PICO_EXAMPLES_BUILD} && \
-  make -j8
+  make -j4
+
+# Install OpenOCD
+RUN \
+  ./bootstrap && \
+  ./configure --enable-ftdi --enable-sysfsgpio --enable-bcm2835gpio --enable-picoprobe && \
+  make -j4 && \
+  make install
 
 # Install Pico Tool
 ARG PICOTOOL_PATH=${CODE_PATH}/picotool
@@ -81,7 +88,7 @@ RUN \
   git clone --depth 1 --branch 1.1.2 https://github.com/raspberrypi/picotool.git ${PICOTOOL_PATH} && \
   cmake -S ${PICOTOOL_PATH} -B ${PICOTOOL_BUILD} && \
   cd ${PICOTOOL_BUILD} && \
-  make && \
+  make -j4 && \
   cp ${PICOTOOL_BUILD}/picotool /bin/picotool && \
   rm -rf ${PICOTOOL_PATH}
 

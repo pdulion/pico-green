@@ -8,3 +8,6 @@ services:
       - type: bind
         source: ./
         target: /opt/code/green-pi
+      - type: bind
+        source: /dev/bus/usb
+        target: /dev/bus/usb
