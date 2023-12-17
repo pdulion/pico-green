@@ -8,6 +8,10 @@ services:
       - type: bind
         source: ./
         target: /opt/code/green-pi
-      - type: bind
-        source: /dev/bus/usb
-        target: /dev/bus/usb
+      - type: volume
+        source: vscode-server
+        target: /opt/code/.vscode-server
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+volumes:
+  vscode-server:

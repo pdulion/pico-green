@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 set(NAME green)
-set(PICO_BOARD pico_w)
-
+set(PICO_BOARD pico_w CACHE STRING "Board type")
 include(pico_sdk_import.cmake)
 
 project(${NAME} C CXX ASM)
@@ -12,11 +11,11 @@ set(CMAKE_CXX_STANDARD 17)
 # Initialize the SDK
 pico_sdk_init()
 
-include(lwip_import.cmake)
+# include(lwip_import.cmake)
 
-SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/port/FreeRTOS-Kernel" CACHE STRING "Local Config")
-include_directories("S{FREERTOS_CONFIG_FILE_DIRECTORY}")
-include(FreeRTOS_Kernel_import.cmake)
+# SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/port/FreeRTOS-Kernel" CACHE STRING "Local Config")
+# include_directories("S{FREERTOS_CONFIG_FILE_DIRECTORY}")
+# include(FreeRTOS_Kernel_import.cmake)
 
 add_subdirectory(src)
 
