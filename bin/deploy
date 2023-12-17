@@ -12,7 +12,8 @@ fi
 
 # SWD Speed in kHz
 speed=5000
-interface=raspberrypi-swd.cfg
+# interface=raspberrypi-swd.cfg
+interface=cmsis-dap.cfg
 
 openocd -s ${HOME}/openocd/tcl/ -f interface/${interface} -f target/rp2040.cfg -c "adapter speed ${speed}" -c "program ${elf} verify reset exit"
 echo Deployed
