@@ -18,13 +18,13 @@ if (NOT DEFINED ENV{WIFI_SSID})
 	message(FATAL_ERROR "WIFI_SSID Environment variable not defined")
 endif()
 
-if (NOT DEFINED ENV{WIFI_PASS})
-	message(FATAL_ERROR "WIFI_PASS Environment variable not defined")
+if (NOT DEFINED ENV{WIFI_PASSWORD})
+	message(FATAL_ERROR "WIFI_PASSWORD Environment variable not defined")
 endif()
 
 target_compile_definitions(${NAME} PRIVATE
     WIFI_SSID=\"$ENV{WIFI_SSID}\"
-    WIFI_PASSWORD=\"$ENV{WIFI_PASS}\"
+    WIFI_PASSWORD=\"$ENV{WIFI_PASSWORD}\"
     CYW43_HOST_NAME=\"${NAME}\"
 )
 
