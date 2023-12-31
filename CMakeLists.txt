@@ -13,9 +13,9 @@ pico_sdk_init()
 
 # include(lwip_import.cmake)
 
-# SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/port/FreeRTOS-Kernel" CACHE STRING "Local Config")
-# include_directories("S{FREERTOS_CONFIG_FILE_DIRECTORY}")
-# include(FreeRTOS_Kernel_import.cmake)
+SET(FREERTOS_CONFIG_FILE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/port/FreeRTOS-Kernel" CACHE STRING "Local Config")
+include_directories("${FREERTOS_CONFIG_FILE_DIRECTORY}")
+include(FreeRTOS_Kernel_import.cmake)
 
 add_subdirectory(src)
 

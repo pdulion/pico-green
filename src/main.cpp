@@ -1,30 +1,32 @@
-#include <iostream>
+#include "flash/flash.h"
+
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
+#include <iostream>
 using namespace std;
 
-int main(int, char **)
-{
-    stdio_init_all();
+#define TASK_PRIORITY	( tskIDLE_PRIORITY + 1UL )
 
-    cout << "Hello, from green-pi!" << endl;
+template<typename T>
+void taskRunner(void* param) {
+  ((T*)param)->run();
+}
 
-    if (cyw43_arch_init())
-    {
-        while (true)
-        {
-            cout << "Initialization Failed!" << endl;
-            sleep_ms(500);
-        }
-    }
+int main(int, char**) {
+  stdio_init_all();
 
-    while (true)
-    {
-        cout << "Blink!" << endl;
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
-        sleep_ms(500);
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
-        sleep_ms(500);
-    }
+  cout << "Hello, from green-pi!" << endl;
+
+  // cyw43_flash();
+  // gpio_flash(10);
+  WifiFlash wifi{};
+  GpioFlash gpio{ 3 };
+
+  TaskHandle_t cyw43_handle, gpio_handle;
+  xTaskCreate(taskRunner<WifiFlash>, "CYW43_Flash", 500, &wifi, TASK_PRIORITY, &cyw43_handle);
+  xTaskCreate(taskRunner<GpioFlash>, "GPIO_Flash", 500, &gpio, TASK_PRIORITY, &gpio_handle);
+  vTaskStartScheduler();
 }

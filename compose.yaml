@@ -1,5 +1,5 @@
 services:
-  pico-cpp-sdk:
+  build:
     image: pico-cpp-sdk
     privileged: true
     build: ./docker
@@ -13,5 +13,6 @@ services:
         target: /opt/code/.vscode-server
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyACM10:/dev/ttyACM10
 volumes:
   vscode-server:

@@ -1,15 +1,17 @@
+add_subdirectory(flash)
 add_executable(${NAME} main.cpp)
 
 target_link_libraries(${NAME}
 	  pico_stdlib
-    # FreeRTOS-Kernel-Heap4
-    # FREERTOS_PORT
+    FreeRTOS-Kernel-Heap4
+    FREERTOS_PORT
     # LWIP_PORT
     # pico_lwip
     pico_cyw43_arch_none
     # pico_cyw43_arch_lwip_poll
     # pico_cyw43_arch_lwip_sys_freertos
     # hardware_rtc
+    flash
 )
 
 target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
