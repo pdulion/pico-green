@@ -4,13 +4,13 @@ add_executable(${NAME} main.cpp)
 target_link_libraries(${NAME}
   freertos_port
   lwip_port
-  pico_stdlib
-  pico_lwip
+
   FreeRTOS-Kernel-Heap4
   hardware_rtc
-  # pico_cyw43_arch_none
-  # pico_cyw43_arch_lwip_poll
   pico_cyw43_arch_lwip_sys_freertos
+  pico_lwip
+  pico_stdlib
+
   flash
 )
 
