@@ -1,4 +1,5 @@
 add_subdirectory(flash)
+add_subdirectory(wifi)
 add_executable(${NAME} main.cpp)
 
 target_link_libraries(${NAME}
@@ -12,6 +13,7 @@ target_link_libraries(${NAME}
   pico_stdlib
 
   flash
+  wifi
 )
 
 target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
@@ -25,9 +27,9 @@ if (NOT DEFINED ENV{WIFI_PASSWORD})
 endif()
 
 target_compile_definitions(${NAME} PRIVATE
-    WIFI_SSID=\"$ENV{WIFI_SSID}\"
-    WIFI_PASSWORD=\"$ENV{WIFI_PASSWORD}\"
-    CYW43_HOST_NAME=\"${NAME}\"
+  WIFI_SSID=\"$ENV{WIFI_SSID}\"
+  WIFI_PASSWORD=\"$ENV{WIFI_PASSWORD}\"
+  CYW43_HOST_NAME=\"${NAME}\"
 )
 
 # create map/bin/hex file etc.
