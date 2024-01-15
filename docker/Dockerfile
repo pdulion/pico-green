@@ -55,14 +55,6 @@ RUN \
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
     -p git
 
-# Install NeoVim
-ARG NEOVIM_PATH=${CODE_PATH}/neovim
-RUN \
-  git clone --depth 1 --branch v0.9.5 https://github.com/neovim/neovim.git ${NEOVIM_PATH} && \
-  cd ${NEOVIM_PATH} && \
-  cmake CMAKE_BUILD_TYPE=RelWithDebInfo && \
-  make install
-
 # Install Pico SDK
 ARG SDK_PATH=${CODE_PATH}/pico_sdk
 RUN \
@@ -117,7 +109,7 @@ RUN \
   git clone --depth 1 --branch v3.5.0  https://github.com/FreeRTOS/corePKCS11.git                           && \
   git clone --depth 1 --branch v3.2.0  https://github.com/FreeRTOS/coreJSON.git                             && \
   git clone --depth 1 --branch v1.2.0  https://github.com/FreeRTOS/coreSNTP.git                             && \
-  git clone --depth 1                  https://github.com/tmux-plugins/tpm              ~/.tmux/plugins/tpm && \
+  git clone --depth 1                  https://github.com/tmux-plugins/tpm              ~/.tmux/plugins/tpm
 
   # git clone --depth 1                  https://github.com/NvChad/NvChad                 ~/.config/nvim
   # git clone --depth 1                  https://github.com/ezhillragesh/nvim-config.git  ~/.config/nvim
