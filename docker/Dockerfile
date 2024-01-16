@@ -120,6 +120,9 @@ RUN \
   git clone --depth 1 --branch v1.2.0  https://github.com/FreeRTOS/coreSNTP.git                             && \
   git clone --depth 1                  https://github.com/tmux-plugins/tpm              ~/.tmux/plugins/tpm
 
+  # git clone --depth 1                  https://github.com/NvChad/NvChad                 ~/.config/nvim
+  # git clone --depth 1                  https://github.com/ezhillragesh/nvim-config.git  ~/.config/nvim
+
 ENV FREERTOS_KERNEL_PATH=${CODE_PATH}/FreeRTOS-Kernel
 
 COPY --chmod=700 --chown=${UID}:${GID} ./entrypoint ${CODE_PATH}/
