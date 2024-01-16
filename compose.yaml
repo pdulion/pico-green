@@ -7,6 +7,9 @@ services:
     privileged: true
     volumes:
       - type: bind
+        source: ~/.ssh
+        target: /opt/code/.ssh
+      - type: bind
         source: ./
         target: /opt/code/green-pi
       - type: volume

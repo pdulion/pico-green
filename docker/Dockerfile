@@ -1,10 +1,5 @@
 FROM debian:bookworm-slim
 
-# Set the code working directory
-ARG CODE_PATH=/opt/code
-WORKDIR ${CODE_PATH}
-ENV HOME=${CODE_PATH}
-
 # Install prerequisites
 ENV DEBIAN_FRONTEND noninteractive
 RUN \
@@ -23,6 +18,7 @@ RUN \
     python3-pip \
     screen \
     software-properties-common \
+    sudo \
     tmux \
     unzip \
     wget \
@@ -52,16 +48,21 @@ RUN \
   git config --global user.name "Phillip DuLion" && \
   git config --global user.email "phillip@dulion.com"
 
-RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
-    -p git
-
-# Install NeoVim
-ARG NEOVIM_PATH=${CODE_PATH}/neovim
+ARG UNAME=code
+ARG UID=1000
+ARG GID=1000
+ARG CODE_PATH=/opt/code
 RUN \
-  git clone --depth 1 --branch v0.9.5 https://github.com/neovim/neovim.git ${NEOVIM_PATH} && \
-  cd ${NEOVIM_PATH} && \
-  cmake CMAKE_BUILD_TYPE=RelWithDebInfo && \
-  make install
+  groupadd -g $GID -o ${UNAME} && \
+  useradd -m -u $UID -g $GID -G sudo -d ${CODE_PATH} -o -s /bin/zsh ${UNAME} && \
+  echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER $UNAME
+WORKDIR ${CODE_PATH}
+
+RUN \
+  mkdir ${CODE_PATH}/.vscode-server && \
+  sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- -p git
 
 # Install Pico SDK
 ARG SDK_PATH=${CODE_PATH}/pico_sdk
@@ -94,7 +95,7 @@ RUN \
   ./bootstrap && \
   ./configure --enable-ftdi --enable-sysfsgpio --enable-bcm2835gpio --enable-picoprobe && \
   make -j4 && \
-  make install
+  sudo make install
 
 # Install Pico Tool
 ARG PICOTOOL_PATH=${CODE_PATH}/picotool
@@ -104,7 +105,7 @@ RUN \
   cmake -S ${PICOTOOL_PATH} -B ${PICOTOOL_BUILD} && \
   cd ${PICOTOOL_BUILD} && \
   make -j4 && \
-  cp ${PICOTOOL_BUILD}/picotool /bin/picotool && \
+  sudo cp ${PICOTOOL_BUILD}/picotool /bin/picotool && \
   rm -rf ${PICOTOOL_PATH}
 
 # Install FreeRTOS
@@ -117,13 +118,10 @@ RUN \
   git clone --depth 1 --branch v3.5.0  https://github.com/FreeRTOS/corePKCS11.git                           && \
   git clone --depth 1 --branch v3.2.0  https://github.com/FreeRTOS/coreJSON.git                             && \
   git clone --depth 1 --branch v1.2.0  https://github.com/FreeRTOS/coreSNTP.git                             && \
-  git clone --depth 1                  https://github.com/tmux-plugins/tpm              ~/.tmux/plugins/tpm && \
-
-  # git clone --depth 1                  https://github.com/NvChad/NvChad                 ~/.config/nvim
-  # git clone --depth 1                  https://github.com/ezhillragesh/nvim-config.git  ~/.config/nvim
+  git clone --depth 1                  https://github.com/tmux-plugins/tpm              ~/.tmux/plugins/tpm
 
 ENV FREERTOS_KERNEL_PATH=${CODE_PATH}/FreeRTOS-Kernel
 
-COPY --chmod=700 ./entrypoint /root/
-COPY --chmod=600 ./.tmux.conf ${CODE_PATH}/
-ENTRYPOINT ["/root/entrypoint"]
+COPY --chmod=700 --chown=${UID}:${GID} ./entrypoint ${CODE_PATH}/
+COPY --chmod=600 --chown=${UID}:${GID} ./.tmux.conf ${CODE_PATH}/
+ENTRYPOINT ${HOME}/entrypoint
